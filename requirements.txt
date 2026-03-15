@@ -1,0 +1,8 @@
+# 基础依赖
+numpy>=1.21.0
+matplotlib>=3.5.0
+
+# 可选依赖（用于进阶示例）
+# gymnasium>=0.28.0    # 现代强化学习环境库
+# tensorflow>=2.10.0   # 用于DQN神经网络训练
+# torch>=1.12.0        # 替代TensorFlow的深度学习框架
