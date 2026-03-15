@@ -1,352 +1,362 @@
-# 🎮 Q-Learning 可视化教程
+# 🎓 强化学习实战笔记
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.8+-blue.svg" alt="Python">
-  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
-  <img src="https://img.shields.io/badge/RL-Q--Learning-orange.svg" alt="RL">
-</p>
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![RL](https://img.shields.io/badge/RL-学习路线-orange.svg)](https://github.com/你的用户名/rl-learning-notes)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-<p align="center">
-  <b>零基础入门强化学习 | 交互式可视化训练 | 完整代码实现</b>
-</p>
-
-<p align="center">
-  🌐 <a href="#-在线体验">在线体验</a> • 
-  📖 <a href="#-文档教程">文档教程</a> • 
-  🚀 <a href="#-快速开始">快速开始</a> • 
-  📷 <a href="#-项目展示">项目展示</a>
-</p>
+> 从入门到实战的强化学习算法实现与笔记
 
 ---
 
-## ✨ 项目特色
+## 📊 学习进度总览
 
-### 🎯 适合初学者
-- **零基础友好**：从概念到代码，循序渐进
-- **中文注释**：所有代码都有详细中文注释
-- **交互式学习**：通过可视化直观理解算法
+| 阶段 | 算法 | 状态 | 代码 | 文档 | 可视化 |
+|:---:|:---|:---:|:---:|:---:|:---:|
+| ✅ | **Q-Learning** | 已完成 | [代码](train.py) | [教程](q-learning/index.html) | [网页版](web_visual.html) |
+| 🚧 | **DQN** | 进行中 | [代码](cartpole_dqn.py) | - | - |
+| ⏳ | **SARSA** | 待学习 | - | - | - |
+| ⏳ | **Policy Gradient** | 待学习 | - | - | - |
+| ⏳ | **Actor-Critic** | 待学习 | - | - | - |
+| ⏳ | **PPO** | 待学习 | - | - | - |
 
-### 🎨 多种可视化方式
-- **🌐 网页版**：无需安装，浏览器直接运行
-- **📊 桌面版**：Matplotlib实时更新Q表
-- **📈 训练曲线**：奖励、步数、探索率变化
-- **🧮 公式展示**：实时显示Q值计算过程
+---
 
-### 📚 完整学习资料
-- **入门教程**：HTML格式的精美教程文档
-- **深度解析**：数学原理和收敛性分析
-- **代码示例**：从基础到进阶的完整代码
+## 🗂️ 项目结构
+
+```
+rl-learning-notes/                 # 强化学习学习笔记
+│
+├── ✅ q-learning/                 # 【已完成】Q-Learning 学习
+│   ├── index.html                 #    Q-Learning 完整教程
+│   └── README.md                  #    教程说明
+│
+├── 🚧 dqn/                        # 【进行中】DQN 学习
+│   └── cartpole_dqn.py            #    DQN 初步实现
+│
+├── ⏳ policy-gradient/             # 【待创建】策略梯度方法
+│   ├── reinforce/                 #    REINFORCE 算法
+│   ├── actor-critic/              #    Actor-Critic
+│   └── ppo/                       #    PPO 算法
+│
+├── ⏳ model-based/                 # 【待创建】基于模型的 RL
+│
+├── 📚 tutorials/                  # 学习资料
+│   ├── 教程.html                   # Q-Learning 入门教程
+│   ├── Q-Learning深度解析.html     # 原理深度解析
+│   └── GitHub命令大全.md           # Git 命令参考
+│
+├── 🛠️ src/                        # 核心代码库
+│   ├── grid_world_env.py          # 网格世界环境
+│   ├── q_learning_agent.py        # Q-Learning 实现
+│   ├── train.py                   # 基础训练脚本
+│   ├── train_visual_v2.py         # 可视化训练
+│   ├── test_visual.py             # 测试脚本
+│   └── web_visual.html            # 网页版可视化
+│
+├── 📝 docs/                       # 文档资料
+│   ├── GitHub_Commands_Guide.html
+│   ├── GitHub_Commands_Guide.docx
+│   └── 文档说明.txt
+│
+├── ⚙️ utils/                      # 工具脚本
+│   ├── convert_doc.py
+│   ├── create_word.py
+│   └── simple_convert.py
+│
+├── requirements.txt               # Python 依赖
+├── .gitignore                     # Git 忽略规则
+└── README.md                      # 本文件
+```
+
+---
+
+## 🎯 当前进度详解
+
+### ✅ Phase 1: Q-Learning（已完成）
+
+**学习成果：**
+- 理解 MDP（马尔可夫决策过程）
+- 掌握贝尔曼方程和时序差分学习
+- 实现完整的 Q-Learning 算法
+- 开发可视化训练工具
+
+**代码文件：**
+```python
+# 核心实现
+grid_world_env.py       # 4×4 网格世界环境
+q_learning_agent.py     # Q-Learning 智能体
+train.py                # 基础训练
+
+# 可视化工具
+train_visual_v2.py      # 桌面版 9 宫格可视化
+web_visual.html         # 网页版交互式训练 ⭐推荐
+test_visual.py          # 智能体测试工具
+```
+
+**文档资料：**
+- [q-learning/index.html](q-learning/index.html) - 完整的网页教程
+- [教程.html](教程.html) - 入门概念讲解
+- [Q-Learning深度解析.html](Q-Learning深度解析.html) - 数学原理
+
+**快速体验：**
+```bash
+# 方式一：网页版（推荐，无需安装）
+双击打开 web_visual.html
+
+# 方式二：Python 运行
+pip install numpy matplotlib
+python train_visual_v2.py
+```
+
+---
+
+### 🚧 Phase 2: DQN（进行中）
+
+**学习目标：**
+- [ ] 理解价值函数近似（神经网络代替 Q 表）
+- [ ] 掌握经验回放（Experience Replay）
+- [ ] 理解目标网络（Target Network）
+- [ ] 实现 CartPole 游戏 AI
+- [ ] 解决连续状态空间问题
+
+**当前代码：**
+```python
+cartpole_dqn.py         # DQN 初步实现（需要完善）
+```
+
+**需要补充：**
+- Replay Buffer 实现
+- Target Network 更新
+- 网络结构优化
+- 训练过程可视化
+
+---
+
+### ⏳ Phase 3: Policy-Based Methods（待学习）
+
+#### 3.1 REINFORCE
+- 策略梯度基础
+- 蒙特卡洛策略梯度
+
+#### 3.2 Actor-Critic
+- A2C/A3C 算法
+- 优势函数估计
+
+#### 3.3 PPO
+- Proximal Policy Optimization
+- 裁剪目标函数
+- 连续控制任务
+
+---
+
+### ⏳ Phase 4: Advanced Topics（待学习）
+
+#### 4.1 Value-Based Extensions
+- Double DQN
+- Dueling DQN
+- Noisy DQN
+- Categorical DQN (C51)
+- Rainbow DQN
+
+#### 4.2 Continuous Control
+- DDPG (Deep Deterministic Policy Gradient)
+- TD3 (Twin Delayed DDPG)
+- SAC (Soft Actor-Critic)
+
+#### 4.3 Model-Based RL
+- Dyna-Q
+- Model Predictive Control (MPC)
+- World Models
+
+#### 4.4 Multi-Agent RL
+- Independent Q-Learning
+- MADDPG
+- QMIX
+
+---
+
+## 📚 学习资源
+
+### 已完成的学习资料
+
+| 资源 | 描述 | 链接 |
+|:---|:---|:---|
+| Q-Learning 教程 | 网页版完整教程 | [q-learning/index.html](q-learning/index.html) |
+| 可视化训练 | 交互式学习工具 | [web_visual.html](web_visual.html) |
+| Git 命令手册 | 版本控制参考 | [GitHub命令大全.md](GitHub命令大全.md) |
+
+### 推荐学习顺序
+
+```
+1. Q-Learning (✅ 已完成)
+   └── 理解基础概念：状态、动作、奖励、Q表
+   └── 掌握时序差分学习
+   └── 实现第一个 RL 智能体
+
+2. DQN (🚧 进行中)
+   └── 学习神经网络基础
+   └── 理解函数近似
+   └── 掌握经验回放和目标网络
+   
+3. SARSA (⏳ 待学习)
+   └── 对比 On-Policy vs Off-Policy
+   └── 理解策略差异
+   
+4. Policy Gradient (⏳ 待学习)
+   └── 学习策略梯度定理
+   └── 实现 REINFORCE
+   
+5. Actor-Critic (⏳ 待学习)
+   └── 结合 Value-Based 和 Policy-Based
+   └── 实现 A2C/A3C
+   
+6. PPO (⏳ 待学习)
+   └── 理解 TRPO 和 PPO
+   └── 应用于复杂任务
+```
 
 ---
 
 ## 🚀 快速开始
 
-### 方式一：网页版（推荐 ⭐）
-
-无需安装任何依赖，直接在浏览器中打开：
+### 环境配置
 
 ```bash
-# 双击打开即可
-web_visual.html
-```
-
-**功能特点**：
-- ✅ 实时训练可视化
-- ✅ 交互式控制（开始/暂停/单步/批量训练）
-- ✅ 响应式设计，支持移动端
-
----
-
-### 方式二：Python 版本
-
-#### 环境要求
-- Python 3.8+
-- NumPy
-- Matplotlib
-
-#### 安装依赖
-```bash
+# 基础依赖（所有阶段都需要）
 pip install numpy matplotlib
+
+# DQN 阶段需要
+pip install torch torchvision
+# 或
+pip install tensorflow
+
+# 高级环境
+pip install gymnasium
 ```
 
-#### 运行项目
+### 运行已有代码
 
 ```bash
-# 1. 基础训练（命令行）
+# 运行 Q-Learning 可视化训练
+python train_visual_v2.py
+
+# 运行基础训练
 python train.py
 
-# 2. 可视化训练（实时展示Q表更新）⭐ 推荐
-python train_visual_v2.py
-
-# 3. 测试训练好的智能体
+# 测试训练好的模型
 python test_visual.py
-
-# 4. 进阶：DQN算法
-python cartpole_dqn.py
 ```
 
 ---
 
-## 📁 项目结构
+## 📝 笔记规范
+
+每个算法的学习笔记包含：
 
 ```
-q-learning-visualization/
+算法名/
+├── README.md              # 理论笔记
+│   ├── 算法原理
+│   ├── 数学公式
+│   ├── 伪代码
+│   └── 关键要点
 │
-├── 📘 教程文档
-│   ├── 教程.html                    # 入门教程（精美排版）
-│   └── Q-Learning深度解析.html       # 数学原理深度解析
+├── src/                   # 代码实现
+│   ├── xxx_env.py         # 环境
+│   ├── xxx_agent.py       # 智能体
+│   └── train.py           # 训练脚本
 │
-├── 🎮 核心代码
-│   ├── grid_world_env.py            # 网格世界环境
-│   ├── q_learning_agent.py          # Q-Learning智能体
-│   └── train.py                     # 基础训练脚本
+├── experiments/           # 实验记录
+│   ├── config.yaml        # 超参数配置
+│   ├── results/           # 训练结果
+│   └── plots/             # 可视化图表
 │
-├── 🎨 可视化工具
-│   ├── web_visual.html              # 网页版可视化 ⭐
-│   ├── train_visual_v2.py           # 桌面版可视化
-│   ├── test_visual.py               # 智能体测试
-│   └── visualize_learning.py        # 学习过程可视化
-│
-├── 🔬 进阶示例
-│   └── cartpole_dqn.py              # DQN深度Q网络
-│
-├── 🛠️ 配置文件
-│   ├── README.md                    # 本文件
-│   ├── .gitignore                   # Git忽略文件
-│   └── requirements.txt             # Python依赖
-│
-└── 📊 输出文件（自动生成）
-    ├── q_learning_model.pkl         # 训练好的模型
-    └── training_results.png         # 训练结果图
+└── README.md              # 学习总结
 ```
 
 ---
 
-## 📖 核心概念
+## 🎯 里程碑
 
-### Q-Learning 算法公式
+### ✅ Milestone 1: 基础价值学习
+- [x] Q-Learning 理解和实现
+- [x] 可视化工具开发
+- [x] 完整教程编写
 
-```
-Q(s,a) = Q(s,a) + α × [r + γ × max(Q(s',a')) - Q(s,a)]
-```
+### 🚧 Milestone 2: 深度强化学习入门
+- [ ] DQN 完整实现
+- [ ] CartPole 问题解决
+- [ ] 经验回放机制
 
-### 参数说明
+### ⏳ Milestone 3: 策略梯度方法
+- [ ] REINFORCE 实现
+- [ ] Actor-Critic 系列
+- [ ] PPO 算法
 
-| 参数 | 符号 | 说明 | 常用值 |
-|------|------|------|--------|
-| 学习率 | α | 控制Q值更新幅度 | 0.1 ~ 0.3 |
-| 折扣因子 | γ | 未来奖励的重要性 | 0.9 ~ 0.99 |
-| 探索率 | ε | 随机探索的概率 | 1.0 → 0.01 |
-
-### 环境设置
-
-```
-4×4 网格世界
-
-[S] [ ] [ ] [ ]    S = 起点 (Start)
-[ ] [X] [ ] [ ]    X = 陷阱 (Trap)   奖励: -10
-[ ] [ ] [X] [ ]    G = 终点 (Goal)   奖励: +10
-[ ] [ ] [ ] [G]    每步惩罚: -1
-
-状态数: 16 (4×4)
-动作数: 4 (上/下/左/右)
-```
+### ⏳ Milestone 4: 高级主题
+- [ ] 连续控制
+- [ ] 多智能体
+- [ ] 模型-based 方法
 
 ---
 
-## 📷 项目展示
+## 🤝 贡献指南
 
-### 1️⃣ 网页版可视化界面
+如果你也在学习强化学习，欢迎：
 
-<p align="center">
-  <b>主界面 - 实时训练监控</b><br>
-  网格世界 | Q值表 | 训练曲线 | 控制面板
-</p>
-
-**功能亮点**：
-- 🎮 **交互式控制**：开始/暂停/单步/批量训练
-- 📊 **实时更新**：Q表、策略、统计数据实时刷新
-- 🧮 **公式展示**：显示当前更新的计算过程
-- 📈 **动态图表**：Plotly绘制的交互式图表
-
----
-
-### 2️⃣ 桌面版可视化
-
-```bash
-python train_visual_v2.py
-```
-
-**界面布局**：
-- 左上：Q表热力图
-- 中上：当前更新详情
-- 右上：Q-Learning公式
-- 左中：网格世界
-- 中中：策略可视化
-- 右中：训练统计
-- 底部：控制按钮
-
----
-
-### 3️⃣ 训练结果示例
-
-**奖励曲线**：
-```
-奖励
-  ↑
-10├                    ●●●●●
-  │              ●●●●●
- 0├        ●●●●●
-  │   ●●●●
--10├●●
-  └────────────────────────→ 回合
-```
-
-- **初期**：奖励波动大（探索阶段）
-- **中期**：奖励逐渐上升（学习阶段）
-- **后期**：奖励稳定在较高水平（收敛）
-
----
-
-## 🎯 使用示例
-
-### 基础用法
-
-```python
-from grid_world_env import GridWorldEnv
-from q_learning_agent import QLearningAgent
-
-# 创建环境
-env = GridWorldEnv(size=4)
-
-# 创建智能体
-agent = QLearningAgent(
-    n_states=16,
-    n_actions=4,
-    learning_rate=0.1,
-    gamma=0.99,
-    epsilon=1.0,
-    epsilon_decay=0.995,
-    epsilon_min=0.01
-)
-
-# 训练
-for episode in range(1000):
-    state = env.reset()
-    total_reward = 0
-    done = False
-    
-    while not done:
-        action = agent.choose_action(state, training=True)
-        next_state, reward, done, _ = env.step(action)
-        agent.learn(state, action, reward, next_state, done)
-        state = next_state
-        total_reward += reward
-    
-    agent.update_epsilon()
-    print(f"Episode {episode}: Reward = {total_reward}")
-```
-
----
-
-## 🔧 自定义配置
-
-### 修改训练参数
-
-在 `train.py` 中调整：
-
-```python
-agent = QLearningAgent(
-    learning_rate=0.1,      # 学习率（太大不稳定，太小学得慢）
-    gamma=0.99,             # 折扣因子（重视长期回报）
-    epsilon=1.0,            # 初始探索率（1.0=完全随机）
-    epsilon_decay=0.995,    # 衰减速度（0.995=慢衰减）
-    epsilon_min=0.01        # 最小探索率（保持一定探索）
-)
-```
-
-### 修改环境
-
-在 `grid_world_env.py` 中：
-
-```python
-env = GridWorldEnv(
-    size=5,                    # 改为5×5网格
-    traps=[(1,1), (2,2), (3,3)] # 添加更多陷阱
-)
-```
-
----
-
-## 📚 学习路径
-
-### 阶段一：入门（1-2小时）
-1. 📖 阅读 [教程.html](./教程.html) 了解基础概念
-2. 🎮 打开 `web_visual.html` 观察训练过程
-3. 📝 运行 `train.py` 完成第一次训练
-
-### 阶段二：理解（2-3小时）
-1. 🔍 阅读 [Q-Learning深度解析.html](./Q-Learning深度解析.html)
-2. 🧮 理解贝尔曼方程和TD学习
-3. 🔬 对比 Q-Learning vs SARSA
-
-### 阶段三：实践（3-5小时）
-1. 🎨 使用 `train_visual_v2.py` 观察Q表更新
-2. ⚙️ 调整参数（学习率、折扣因子等）观察效果
-3. 🧪 修改环境（网格大小、陷阱位置）
-
-### 阶段四：进阶（5小时+）
-1. 🧠 学习 `cartpole_dqn.py` 中的DQN算法
-2. 📝 尝试实现 Double Q-Learning
-3. 🚀 应用到其他环境（OpenAI Gym）
-
----
-
-## 🛠️ 技术栈
-
-| 类别 | 技术 |
-|------|------|
-| **编程语言** | Python 3.8+ |
-| **数值计算** | NumPy |
-| **数据可视化** | Matplotlib, Plotly.js |
-| **前端框架** | Tailwind CSS |
-| **文档格式** | HTML5 |
-
----
-
-## 🤝 如何贡献
-
-欢迎提交 Issue 和 Pull Request！
-
-### 贡献方式
-1. 🐛 报告 Bug
-2. 💡 提出新功能建议
-3. 📝 改进文档
-4. 🔧 优化代码
+1. **分享笔记** - 提交你的学习心得
+2. **完善代码** - 改进现有实现
+3. **补充算法** - 添加新的算法实现
+4. **修复错误** - 指出代码或文档中的问题
 
 ### 提交规范
-- 使用清晰的提交信息
-- 确保代码通过基础测试
-- 更新相关文档
+
+```
+[算法名] 修改描述
+
+例：
+[Q-Learning] 添加可视化注释
+[DQN] 修复 target network 更新逻辑
+[Docs] 更新学习路线图
+```
 
 ---
 
-## 📄 许可证
+## 📖 推荐资源
 
-本项目采用 [MIT License](LICENSE) 开源许可证。
+### 书籍
+- [《Reinforcement Learning: An Introduction》](http://incompleteideas.net/book/RLbook2020.pdf) - Sutton & Barto（圣经）
+- [《动手学强化学习》](https://hrl.boyuai.com/) - 俞勇等
+- [《Easy RL》](https://github.com/datawhalechina/easy-rl) - Datawhale
 
-你可以自由地：
-- ✅ 使用
-- ✅ 修改
-- ✅ 分发
-- ✅ 商用
+### 课程
+- [David Silver's RL Course](https://www.youtube.com/watch?v=2pWv7GOvuf0) - DeepMind
+- [CS285: Deep RL](http://rail.eecs.berkeley.edu/deeprlcourse/) - Berkeley
+- [李宏毅 - 强化学习](https://www.bilibili.com/video/BV1XP4y1d7Bk) - 台大
 
-只需保留原始许可证和版权声明。
+### 代码参考
+- [Stable Baselines3](https://github.com/DLR-RM/stable-baselines3)
+- [CleanRL](https://github.com/vwxyzjn/cleanrl)
+- [Spinning Up in Deep RL](https://spinningup.openai.com/)
 
 ---
 
-## 🙏 致谢
+## 📄 开源协议
 
-- 感谢 [OpenAI](https://openai.com/) 提供的 Gym 环境
-- 感谢 [Sutton & Barto](http://incompleteideas.net/book/RLbook2020.pdf) 的经典教材
-- 感谢所有开源社区的贡献者
+本项目采用 [MIT License](LICENSE) 开源。
+
+学习笔记和代码可以自由使用、修改和分享。
+
+---
+
+<p align="center">
+  <b>强化学习之旅，从 Q-Learning 开始 🚀</b>
+</p>
+
+<p align="center">
+  ⭐ 如果对你有帮助，请点个 Star 支持一下！
+</p>
+
+<p align="center">
+  <a href="https://github.com/你的用户名">GitHub</a>
+</p>
