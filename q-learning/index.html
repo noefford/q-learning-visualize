@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q-Learning 完全指南 - 从入门到精通</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light: #f8fafc;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: var(--dark);
+            background: var(--light);
+        }
+        
+        /* Header */
+        header {
+            background: var(--gradient);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.3;
+        }
+        
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Navigation */
+        nav {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        nav li {
+            margin: 0;
+        }
+        
+        nav a {
+            display: block;
+            padding: 15px 25px;
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        /* Main Content */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        section {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin: 30px 0 15px 0;
+        }
+        
+        h4 {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin: 25px 0 10px 0;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            color: #475569;
+        }
+        
+        /* Code Blocks */
+        .code-block {
+            background: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .code-header {
+            background: #334155;
+            padding: 10px 20px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .code-dots {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .code-dot.red { background: #ef4444; }
+        .code-dot.yellow { background: #f59e0b; }
+        .code-dot.green { background: #10b981; }
+        
+        pre {
+            padding: 20px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+        
+        code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: var(--primary);
+            font-size: 0.9em;
+        }
+        
+        .code-block code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+        
+        /* Formula Box */
+        .formula-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-left: 5px solid var(--primary);
+            padding: 25px;
+            border-radius: 0 12px 12px 0;
+            margin: 25px 0;
+            text-align: center;
+            font-size: 1.3rem;
+            font-family: 'Times New Roman', serif;
+        }
+        
+        .formula-box .highlight {
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            padding: 20px 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 5px solid;
+        }
+        
+        .info-box.tip {
+            background: #f0fdf4;
+            border-color: var(--success);
+        }
+        
+        .info-box.note {
+            background: #eff6ff;
+            border-color: var(--primary);
+        }
+        
+        .info-box.warning {
+            background: #fffbeb;
+            border-color: var(--warning);
+        }
+        
+        .info-box-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Grid Demo */
+        .grid-demo {
+            display: inline-grid;
+            grid-template-columns: repeat(4, 60px);
+            gap: 8px;
+            padding: 25px;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin: 20px auto;
+            text-align: center;
+        }
+        
+        .grid-cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .grid-cell.start { background: #93c5fd; color: #1e40af; }
+        .grid-cell.goal { background: #86efac; color: #166534; }
+        .grid-cell.trap { background: #fca5a5; color: #991b1b; }
+        .grid-cell.normal { background: white; border: 2px solid #e2e8f0; color: #64748b; }
+        
+        /* Algorithm Steps */
+        .algorithm-steps {
+            counter-reset: step;
+            list-style: none;
+        }
+        
+        .algorithm-steps li {
+            position: relative;
+            padding: 20px 20px 20px 70px;
+            margin: 15px 0;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .algorithm-steps li::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tr:hover {
+            background: #f8fafc;
+        }
+        
+        /* Comparison Cards */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .compare-card {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .compare-card h4 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+        
+        footer a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            nav a {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            section {
+                padding: 25px;
+            }
+            
+            .formula-box {
+                font-size: 1.1rem;
+                padding: 20px;
+            }
+        }
+        
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        section {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Q-Learning</h1>
+        <p>最经典的无模型强化学习算法，让智能体通过试错学习最优策略</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#intro">简介</a></li>
+            <li><a href="#concept">核心概念</a></li>
+            <li><a href="#formula">数学原理</a></li>
+            <li><a href="#algorithm">算法流程</a></li>
+            <li><a href="#code">代码实现</a></li>
+            <li><a href="#practice">实践技巧</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Introduction -->
+        <section id="intro">
+            <h2>什么是 Q-Learning？</h2>
+            
+            <div class="info-box note">
+                <div class="info-box-title">📖 一句话定义</div>
+                <p>Q-Learning 是一种<strong>无模型（Model-Free）</strong>、<strong>离线策略（Off-Policy）</strong>的强化学习算法，通过维护一个 Q 表来记录每个状态下每个动作的价值，从而学习最优策略。</p>
+            </div>
+
+            <h3>算法特点</h3>
+            <div class="compare-grid">
+                <div class="compare-card">
+                    <h4>🎯 无模型</h4>
+                    <p>不需要知道环境的转移概率和奖励函数，通过与环境交互直接学习。</p>
+                </div>
+                <div class="compare-card">
+                    <h4>🔀 离线策略</h4>
+                    <p>学习的策略与执行的动作策略可以不同，使用贪婪策略学习，ε-贪心策略执行。</p>
+                </div>
+                <div class="compare-card">
+                    <h4>⏱️ 时序差分</h4>
+                    <p>使用自举（Bootstrapping）方法，用当前估计更新当前估计。</p>
+                </div>
+            </div>
+
+            <h3>应用场景</h3>
+            <ul>
+                <li>🎮 游戏 AI（Atari、围棋等）</li>
+                <li>🤖 机器人控制</li>
+                <li>🚗 自动驾驶决策</li>
+                <li>📊 资源调度优化</li>
+                <li>🔍 推荐系统</li>
+            </ul>
+        </section>
+
+        <!-- Core Concepts -->
+        <section id="concept">
+            <h2>核心概念</h2>
+
+            <h3>马尔可夫决策过程（MDP）</h3>
+            <p>强化学习问题通常建模为 MDP，包含四个要素：</p>
+            <table>
+                <tr>
+                    <th>符号</th>
+                    <th>含义</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td><code>S</code></td>
+                    <td>状态空间（State）</td>
+                    <td>环境所有可能的状态</td>
+                </tr>
+                <tr>
+                    <td><code>A</code></td>
+                    <td>动作空间（Action）</td>
+                    <td>智能体可以执行的动作</td>
+                </tr>
+                <tr>
+                    <td><code>P</code></td>
+                    <td>转移概率（Transition）</td>
+                    <td>执行动作后转移到新状态的概率</td>
+                </tr>
+                <tr>
+                    <td><code>R</code></td>
+                    <td>奖励函数（Reward）</td>
+                    <td>执行动作后获得的即时奖励</td>
+                </tr>
+            </table>
+
+            <h3>Q 值（Quality Value）</h3>
+            <p>Q 值表示在某一状态下执行某一动作的<strong>期望累积奖励</strong>：</p>
+            <div class="formula-box">
+                <span class="highlight">Q(s, a)</span> = 在状态 <span class="highlight">s</span> 执行动作 <span class="highlight">a</span> 后，能获得的期望总奖励
+            </div>
+
+            <h3>环境示例：网格世界</h3>
+            <p>我们使用一个 4×4 的网格世界来演示 Q-Learning：</p>
+            
+            <div style="text-align: center;">
+                <div class="grid-demo">
+                    <div class="grid-cell start">S</div>
+                    <div class="grid-cell normal">1</div>
+                    <div class="grid-cell normal">2</div>
+                    <div class="grid-cell normal">3</div>
+                    <div class="grid-cell normal">4</div>
+                    <div class="grid-cell trap">X</div>
+                    <div class="grid-cell normal">6</div>
+                    <div class="grid-cell normal">7</div>
+                    <div class="grid-cell normal">8</div>
+                    <div class="grid-cell normal">9</div>
+                    <div class="grid-cell trap">X</div>
+                    <div class="grid-cell normal">11</div>
+                    <div class="grid-cell normal">12</div>
+                    <div class="grid-cell normal">13</div>
+                    <div class="grid-cell normal">14</div>
+                    <div class="grid-cell goal">G</div>
+                </div>
+            </div>
+
+            <div class="info-box tip">
+                <div class="info-box-title">🎯 环境设置</div>
+                <ul>
+                    <li><strong>起点 S</strong>：左上角 (0,0)</li>
+                    <li><strong>终点 G</strong>：右下角 (3,3)，奖励 +10</li>
+                    <li><strong>陷阱 X</strong>：(1,1) 和 (2,2)，惩罚 -10</li>
+                    <li><strong>每步</strong>：惩罚 -1（鼓励快速到达）</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Mathematical Formula -->
+        <section id="formula">
+            <h2>数学原理</h2>
+
+            <h3>贝尔曼最优方程</h3>
+            <p>Q-Learning 的理论基础是<strong>贝尔曼最优方程</strong>：</p>
+            <div class="formula-box">
+                <span class="highlight">Q*(s, a)</span> = R(s, a) + <span class="highlight">γ</span> · max<sub>a'</sub> <span class="highlight">Q*(s', a')</span>
+            </div>
+
+            <h3>Q 值更新公式</h3>
+            <p>这是 Q-Learning 最核心的公式，必须牢记：</p>
+            <div class="formula-box">
+                Q(s,a) ← Q(s,a) + <span class="highlight">α</span> × [r + <span class="highlight">γ</span> × max<sub>a</sub>Q(s',a) - Q(s,a)]
+            </div>
+
+            <h3>参数详解</h3>
+            <table>
+                <tr>
+                    <th>参数</th>
+                    <th>名称</th>
+                    <th>范围</th>
+                    <th>作用</th>
+                </tr>
+                <tr>
+                    <td><code>α</code></td>
+                    <td>学习率</td>
+                    <td>(0, 1]</td>
+                    <td>控制新信息覆盖旧信息的程度</td>
+                </tr>
+                <tr>
+                    <td><code>γ</code></td>
+                    <td>折扣因子</td>
+                    <td>[0, 1]</td>
+                    <td>控制未来奖励的重要性</td>
+                </tr>
+                <tr>
+                    <td><code>r</code></td>
+                    <td>即时奖励</td>
+                    <td>-∞ ~ +∞</td>
+                    <td>执行动作后获得的奖励</td>
+                </tr>
+                <tr>
+                    <td><code>s'</code></td>
+                    <td>下一状态</td>
+                    <td>-</td>
+                    <td>执行动作后的新状态</td>
+                </tr>
+            </table>
+
+            <h3>探索与利用</h3>
+            <p>强化学习面临的核心问题：是选择当前已知的最佳动作，还是尝试新动作？</p>
+            
+            <div class="info-box warning">
+                <div class="info-box-title">⚖️ ε-贪心策略</div>
+                <p>以 <strong>ε</strong> 的概率随机选择动作（探索），以 <strong>1-ε</strong> 的概率选择当前 Q 值最高的动作（利用）。</p>
+            </div>
+
+            <div class="formula-box">
+                π(a|s) = <span class="highlight">ε</span>/|A|  (随机探索)  或  <span class="highlight">1-ε</span>  (选择最优)
+            </div>
+        </section>
+
+        <!-- Algorithm -->
+        <section id="algorithm">
+            <h2>算法流程</h2>
+
+            <h3>完整伪代码</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <span>Q-Learning Algorithm</span>
+                </div>
+                <pre><code># 初始化
+初始化 Q 表: Q(s, a) = 0, 对所有 s ∈ S, a ∈ A
+设定学习率 α ∈ (0, 1], 折扣因子 γ ∈ [0, 1]
+设定探索率 ε ∈ [0, 1], 衰减系数
+
+# 主循环
+for episode = 1, 2, ..., N:
+    初始化状态 s₁
+    
+    for t = 1, 2, ..., T:
+        # 1. 选择动作 (ε-贪心策略)
+        if random() < ε:
+            aₜ ← 随机选择动作           # 探索
+        else:
+            aₜ ← argmaxₐ Q(sₜ, a)     # 利用
+        
+        # 2. 执行动作，观察结果
+        执行动作 aₜ, 观察奖励 rₜ₊₁ 和下一状态 sₜ₊₁
+        
+        # 3. Q 值更新 (核心!)
+        Q(sₜ, aₜ) ← Q(sₜ, aₜ) + α[rₜ₊₁ + γ·maxₐ Q(sₜ₊₁, a) - Q(sₜ, aₜ)]
+        
+        # 4. 状态转移
+        sₜ ← sₜ₊₁
+        
+        # 5. 检查终止条件
+        if sₜ 是终止状态:
+            break
+    
+    # 6. 衰减探索率
+    ε ← max(ε × decay, ε_min)
+
+返回 Q 表</code></pre>
+            </div>
+
+            <h3>算法步骤详解</h3>
+            <ol class="algorithm-steps">
+                <li>
+                    <strong>初始化</strong>
+                    <p>创建 Q 表，初始值设为 0。设定学习率 α、折扣因子 γ、探索率 ε。</p>
+                </li>
+                <li>
+                    <strong>开始新回合</strong>
+                    <p>重置环境到初始状态，准备开始一轮新的探索。</p>
+                </li>
+                <li>
+                    <strong>选择动作</strong>
+                    <p>使用 ε-贪心策略：以 ε 概率随机探索，以 1-ε 概率选择当前最优动作。</p>
+                </li>
+                <li>
+                    <strong>执行并观察</strong>
+                    <p>执行选定的动作，观察环境返回的奖励和新状态。</p>
+                </li>
+                <li>
+                    <strong>更新 Q 值</strong>
+                    <p>使用 TD 误差更新 Q 表：向 TD 目标移动一小步（步长为 α）。</p>
+                </li>
+                <li>
+                    <strong>重复直到结束</strong>
+                    <p>循环执行直到到达终点、踩中陷阱或超过最大步数。</p>
+                </li>
+                <li>
+                    <strong>衰减探索率</strong>
+                    <p>逐渐减小 ε，从探索转向利用。</p>
+                </li>
+            </ol>
+        </section>
+
+        <!-- Code Implementation -->
+        <section id="code">
+            <h2>代码实现</h2>
+
+            <h3>环境类</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <span>grid_world_env.py</span>
+                </div>
+                <pre><code>import numpy as np
+
+class GridWorldEnv:
+    """网格世界环境"""
+    
+    def __init__(self, size=4):
+        self.size = size
+        self.start_pos = (0, 0)
+        self.goal_pos = (size-1, size-1)
+        self.traps = [(1, 1), (2, 2)]
+        self.action_space = 4  # 上、下、左、右
+        
+    def reset(self):
+        """重置环境"""
+        self.current_pos = self.start_pos
+        self.steps = 0
+        return self._get_state()
+    
+    def step(self, action):
+        """执行动作"""
+        row, col = self.current_pos
+        
+        # 移动
+        if action == 0: row = max(0, row-1)      # 上
+        elif action == 1: row = min(self.size-1, row+1)  # 下
+        elif action == 2: col = max(0, col-1)    # 左
+        elif action == 3: col = min(self.size-1, col+1)  # 右
+        
+        self.current_pos = (row, col)
+        
+        # 计算奖励
+        reward = -1
+        done = False
+        
+        if self.current_pos == self.goal_pos:
+            reward = 10
+            done = True
+        elif self.current_pos in self.traps:
+            reward = -10
+            done = True
+        elif self.steps >= 100:
+            done = True
+            
+        return self._get_state(), reward, done, {}
+    
+    def _get_state(self):
+        """获取状态索引"""
+        return self.current_pos[0] * self.size + self.current_pos[1]</code></pre>
+            </div>
+
+            <h3>智能体类</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <span>q_learning_agent.py</span>
+                </div>
+                <pre><code>import numpy as np
+
+class QLearningAgent:
+    """Q-Learning 智能体"""
+    
+    def __init__(self, n_states, n_actions, lr=0.1, gamma=0.99):
+        self.n_states = n_states
+        self.n_actions = n_actions
+        self.lr = lr          # 学习率 α
+        self.gamma = gamma    # 折扣因子
+        self.epsilon = 1.0    # 探索率
+        
+        # 初始化 Q 表
+        self.q_table = np.zeros((n_states, n_actions))
+    
+    def choose_action(self, state, training=True):
+        """ε-贪心策略选择动作"""
+        if training and np.random.random() < self.epsilon:
+            return np.random.randint(self.n_actions)  # 探索
+        else:
+            return np.argmax(self.q_table[state])     # 利用
+    
+    def learn(self, state, action, reward, next_state, done):
+        """Q-Learning 更新"""
+        current_q = self.q_table[state, action]
+        
+        # 计算 TD 目标
+        if done:
+            target = reward
+        else:
+            target = reward + self.gamma * np.max(self.q_table[next_state])
+        
+        # 更新 Q 值
+        self.q_table[state, action] += self.lr * (target - current_q)
+    
+    def decay_epsilon(self, decay=0.995, min_val=0.01):
+        """衰减探索率"""
+        self.epsilon = max(min_val, self.epsilon * decay)</code></pre>
+            </div>
+
+            <h3>训练脚本</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <span>train.py</span>
+                </div>
+                <pre><code>from grid_world_env import GridWorldEnv
+from q_learning_agent import QLearningAgent
+
+# 创建环境和智能体
+env = GridWorldEnv(size=4)
+agent = QLearningAgent(n_states=16, n_actions=4)
+
+# 训练
+for episode in range(1000):
+    state = env.reset()
+    total_reward = 0
+    done = False
+    
+    while not done:
+        # 选择动作
+        action = agent.choose_action(state)
+        
+        # 执行动作
+        next_state, reward, done, _ = env.step(action)
+        
+        # 学习
+        agent.learn(state, action, reward, next_state, done)
+        
+        state = next_state
+        total_reward += reward
+    
+    # 衰减探索率
+    agent.decay_epsilon()
+    
+    if (episode + 1) % 100 == 0:
+        print(f"Episode {episode+1}, Reward: {total_reward:.2f}, "
+              f"Epsilon: {agent.epsilon:.3f}")
+
+print("训练完成！")</code></pre>
+            </div>
+        </section>
+
+        <!-- Practice Tips -->
+        <section id="practice">
+            <h2>实践技巧</h2>
+
+            <h3>参数调优</h3>
+            <table>
+                <tr>
+                    <th>参数</th>
+                    <th>太小</th>
+                    <th>合适</th>
+                    <th>太大</th>
+                </tr>
+                <tr>
+                    <td>学习率 α</td>
+                    <td>学习极慢</td>
+                    <td>0.1 ~ 0.3</td>
+                    <td>不稳定震荡</td>
+                </tr>
+                <tr>
+                    <td>折扣因子 γ</td>
+                    <td>短视只看眼前</td>
+                    <td>0.9 ~ 0.99</td>
+                    <td>可能发散</td>
+                </tr>
+                <tr>
+                    <td>探索率 ε</td>
+                    <td>陷入局部最优</td>
+                    <td>1.0→0.01</td>
+                    <td>学习不稳定</td>
+                </tr>
+            </table>
+
+            <h3>常见问题</h3>
+            <div class="info-box warning">
+                <div class="info-box-title">Q1: Q 值不收敛怎么办？</div>
+                <ul>
+                    <li>尝试减小学习率到 0.05 或 0.01</li>
+                    <li>增加训练轮数</li>
+                    <li>检查奖励设置是否合理</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <div class="info-box-title">Q2: 智能体总是走同一个路径？</div>
+                <ul>
+                    <li>检查 ε 是否衰减太快</li>
+                    <li>确保探索率不会降到 0</li>
+                    <li>尝试更长的训练时间</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <div class="info-box-title">Q3: 踩陷阱次数太多？</div>
+                <ul>
+                    <li>增加陷阱的惩罚值</li>
+                    <li>延长探索阶段的 ε 值</li>
+                    <li>添加更多训练轮数</li>
+                </ul>
+            </div>
+
+            <h3>进阶学习</h3>
+            <p>掌握 Q-Learning 后，可以继续学习：</p>
+            <ul>
+                <li><strong>SARSA</strong>：On-Policy 的时序差分算法</li>
+                <li><strong>DQN</strong>：使用神经网络近似 Q 函数</li>
+                <li><strong>Double DQN</strong>：解决 Q 值过估计问题</li>
+                <li><strong>Dueling DQN</strong>：分离状态价值和动作优势</li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Created with ❤️ for RL Learners</p>
+        <p style="margin-top: 10px;">
+            <a href="https://github.com">GitHub</a> | 
+            <a href="#">Back to Top</a>
+        </p>
+    </footer>
+</body>
+</html>
